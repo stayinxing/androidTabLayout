@@ -1,22 +1,22 @@
 package star.yx.tabview;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements TabLayout.OnTabClickListener{
+public class MainActivity extends AppCompatActivity implements TabLayout.OnTabClickListener {
 
     private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private ArrayList<TabItem> tabs;
+    private ActionBar actionBar;
     BaseFragment fragment;
-    ViewPager mViewPager;
-    ArrayList<TabItem>tabs;
-    public ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,19 +25,20 @@ public class MainActivity extends ActionBarActivity implements TabLayout.OnTabCl
         initView();
         initData();
     }
-    private void initView(){
-        mTabLayout=(TabLayout)findViewById(R.id.tab_layout);
-        mViewPager=(ViewPager)findViewById(R.id.viewpager);
-        actionBar=getActionBar();
-       if(actionBar!=null){
-           actionBar.setTitle(R.string.wechat);
-       }
+
+    private void initView() {
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.wechat);
+        }
 
     }
 
-    private void initData(){
+    private void initData() {
 
-        tabs=new ArrayList<TabItem>();
+        tabs = new ArrayList<>();
         tabs.add(new TabItem(R.drawable.selector_tab_msg, R.string.wechat, WechatFragment.class));
         tabs.add(new TabItem(R.drawable.selector_tab_contact, R.string.contacts, ContactsFragment.class));
         tabs.add(new TabItem(R.drawable.selector_tab_moments, R.string.discover, DiscoverFragment.class));
@@ -48,7 +49,8 @@ public class MainActivity extends ActionBarActivity implements TabLayout.OnTabCl
 
         FragAdapter adapter = new FragAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(adapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -75,7 +77,6 @@ public class MainActivity extends ActionBarActivity implements TabLayout.OnTabCl
         mViewPager.setCurrentItem(tabs.indexOf(tabItem));
 
     }
-
 
 
     public class FragAdapter extends FragmentPagerAdapter {
